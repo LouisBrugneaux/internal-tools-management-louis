@@ -1,0 +1,268 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+}
+
+/* Partie gauche de la navbar (logo + liens) */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Logo + texte "TechCorp" */
+.navbar-logo a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--link);
+  text-decoration: none;
+}
+
+.logo-bg {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icône "zap" dans le logo */
+.logo-icon {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2.5;
+  color: #fff;
+}
+
+/* Liens de navigation (Dashboard, Tools, Analytics) */
+.navbar-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.navbar-links li a {
+  text-decoration: none;
+  color: var(--link);
+  font-weight: 500;
+}
+
+.navbar-links li a:hover {
+  color: var(--link-hover);
+}
+
+.navbar-links li a.active {
+  font-weight: 700;
+}
+
+/* Partie droite de la navbar recherche + icones */
+.navbar-parameters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Boutons d’icône (lune/soleil, notif, settings, etc.) */
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 9999px; /* bouton rond */
+  cursor: pointer;
+}
+
+/* Icônes par défaut */
+.icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-muted);
+  stroke-width: 2;
+  transition: color .2s ease, transform .15s ease;
+}
+
+.icon-btn:hover .icon {
+  color: var(--link-hover);
+  transform: translateY(-1px);
+}
+
+/* Icone soleil en jaune */
+.sun-icon {
+  color: #f59e0b;
+}
+
+/* Badge rouge sur la cloche de notifications */
+.notif .badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  background: var(--notif);
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--card-bg);
+}
+
+/* Profil + chevron */
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .25rem .5rem;
+  border: none;
+  background: transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.profile-btn:hover {
+  background: var(--hover);
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--avatar-bg);
+  display: inline-block;
+}
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  stroke-width: 2;
+}
+
+/* --- Barre de recherche --- */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 36px;
+  padding: 0 0.75rem;
+  background: var(--search-bg);
+  border: 1px solid var(--search-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+/* Effet focus quand on clique dedans */
+.search-field:focus-within {
+  border-color: #cbd5e1;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
+}
+
+.search-icon {
+  width: 25px;
+  height: 25px;
+  color: #9ca3af;
+  stroke-width: 2;
+}
+
+.search-input {
+  width: 200px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: var(--text);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* --- Dropdown utilisateur --- */
+.profile { position: relative; }
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 220px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+  padding: 8px;
+  z-index: 50;
+}
+
+.dropdown-header {
+  padding: 8px 10px 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.dropdown-header strong {
+  display: block;
+  color: var(--text);
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: background .15s ease, transform .05s ease;
+}
+.dropdown-item:hover {
+  background: var(--hover);
+}
+.dropdown-item:active {
+  transform: translateY(1px);
+}
+
+.dropdown-item .item-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  stroke-width: 2;
+}
+
+.dropdown-item.danger {
+  color: #b91c1c; /* rouge */
+}
+.dropdown-item.danger .item-icon {
+  color: #b91c1c;
+}
+
+.dropdown-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+/* Chevron qui pivote quand le menu est ouvert */
+.chevron.open {
+  transform: rotate(180deg);
+  transition: transform .15s ease;
+}

@@ -1,0 +1,92 @@
+<header>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <div class="navbar-logo">
+        <a routerLink="/dashboard">
+          <div class="logo-bg">
+            <lucide-icon name="zap" class="logo-icon"></lucide-icon>
+          </div>
+          TechCorp
+        </a>
+      </div>
+      <ul class="navbar-links">
+        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+        <li><a routerLink="/tools" routerLinkActive="active">Tools</a></li>
+        <li><a routerLink="/analytics" routerLinkActive="active">Analytics</a></li>
+      </ul>
+    </div>
+
+    <ul class="navbar-parameters">
+      <li class="search">
+        <div class="search-field">
+          <lucide-icon name="search" class="search-icon"></lucide-icon>
+          <input type="text" class="search-input" placeholder="Search tools..." />
+        </div>
+      </li>
+
+      <li>
+        <button class="icon-btn" [attr.aria-label]="themeBtnLabel" (click)="toggleTheme()">
+          <lucide-icon [name]="themeIcon" class="icon" [ngClass]="{ 'sun-icon': isDark }"></lucide-icon>
+        </button>
+      </li>
+
+
+      <li class="notif">
+        <button class="icon-btn" aria-label="Notifications">
+          <span class="badge"></span>
+          <lucide-icon name="bell" class="icon"></lucide-icon>
+        </button>
+      </li>
+
+      <li>
+        <button class="icon-btn" aria-label="Paramètres">
+          <lucide-icon name="settings" class="icon"></lucide-icon>
+        </button>
+      </li>
+
+      <li class="profile">
+        <button
+          class="profile-btn"
+          aria-label="Profil"
+          [attr.aria-expanded]="isMenuOpen"
+          (click)="toggleMenu($event)"
+        >
+          <span class="avatar"></span>
+          <lucide-icon name="chevron-down" class="chevron" [ngClass]="{ open: isMenuOpen }"></lucide-icon>
+        </button>
+
+        <!-- Dropdown utilisateur (visuel uniquement) -->
+        <div class="dropdown" *ngIf="isMenuOpen" role="menu" aria-label="User menu">
+          <div class="dropdown-header">
+            Signed in as
+            <strong>john&#64;company.com</strong>
+          </div>
+
+          <button type="button" class="dropdown-item" role="menuitem">
+            <lucide-icon name="user" class="item-icon"></lucide-icon>
+            Profile
+          </button>
+          <button type="button" class="dropdown-item" role="menuitem">
+            <lucide-icon name="settings" class="item-icon"></lucide-icon>
+            Account settings
+          </button>
+          <button type="button" class="dropdown-item" role="menuitem">
+            <lucide-icon name="credit-card" class="item-icon"></lucide-icon>
+            Billing
+          </button>
+          <button type="button" class="dropdown-item" role="menuitem">
+            <lucide-icon name="users" class="item-icon"></lucide-icon>
+            Team & roles
+          </button>
+
+          <div class="dropdown-sep" role="separator"></div>
+
+          <button type="button" class="dropdown-item danger" role="menuitem">
+            <lucide-icon name="log-out" class="item-icon"></lucide-icon>
+            Log out
+          </button>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>

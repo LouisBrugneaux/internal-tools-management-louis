@@ -1,0 +1,255 @@
+/* Le composant occupe la page et applique le fond */
+:host {
+  display: block;
+  background: var(--bg);
+  min-height: calc(100vh - 71px);
+}
+
+/* Conteneur principal avec marges */
+.dashboard {
+  padding: 1.5rem 2rem;
+}
+
+/* En-tête (titre + sous-titre) */
+.dashboard-header h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--text);
+  margin: 1rem 0 .5rem 0;
+  letter-spacing: -0.01em;
+}
+
+
+/* ----- Cartes ----- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.06);
+}
+
+/* En-tête de carte (titre + méta à droite) */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.card-header h2 {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Petit texte "Last 30 days" */
+.meta {
+  display: inline-flex;
+  gap: 18px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.meta-icon {
+  color: var(--text-muted);
+}
+
+/* ----- Table Recent Tools ----- */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.table thead th {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.table td {
+  padding: 14px 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--row-border);
+}
+
+.table tbody tr:hover {
+  background: var(--hover);
+}
+
+.col-tool {
+  padding-left: 24px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Cellule avec logo + nom de l’outil */
+.tool-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-bg {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-name {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Icône d’application */
+.icon-25 {
+  width:25px;
+  height:25px;
+  stroke-width: 2.5;
+  color: #fff;
+}
+.icon-invert {
+  color:#fff;
+}
+
+/* Badges de statut (active / expiring / unused) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.badge--active   {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+}
+.badge--expiring {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+}
+.badge--unused   {
+  background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+}
+
+/* === KPI GRID (les 4 cartes du haut) === */
+.dashboard > section.grid {
+  display: grid;
+  margin: 2rem 0; /* espace au-dessus et en dessous */
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+/* 2 colonnes sur tablette, 4 sur desktop */
+@media (min-width: 768px)  { .dashboard > section.grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .dashboard > section.grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* Apparence des cartes KPI */
+.dashboard > section.grid > .card {
+  position: relative;
+  padding: 22px 22px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--kpi-border);
+  background: var(--kpi-bg);
+  box-shadow: var(--kpi-shadow);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+/* Effet hover sur les cartes KPI */
+.dashboard > section.grid > .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--kpi-shadow-hover);
+}
+
+/* Titres et valeurs dans les cartes KPI */
+.dashboard > section.grid > .card h4 {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.dashboard > section.grid > .card .value {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  color: var(--text);
+  font-weight: 800;
+}
+.dashboard > section.grid > .card .value .muted {
+  color: var(--text-muted);
+  font-weight: 800;
+  margin-left: 6px;
+}
+
+.dashboard > section.grid > .card .pill {
+  margin-top: 14px;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* En-tête des cartes KPI (titre + icône) */
+.kpi-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.kpi-head h4 {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Icônes colorées dans les cartes KPI */
+.kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(16,24,40,.18),
+  inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.kpi-icon lucide-icon {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2.5;
+}
+
+/* Couleurs spécifiques des icônes/pills KPI */
+.kpi-icon--budget { background: linear-gradient(135deg,#06c28a 0%, #20d8a4 100%); }
+.kpi-icon--tools  { background: linear-gradient(135deg,#5b6cff 0%, #8b5bff 100%); }
+.kpi-icon--department  { background: linear-gradient(135deg,#ff7341 0%, #ff4d6d 100%); }
+.kpi-icon--cpu    { background: linear-gradient(135deg,#ff2d87 0%, #ff5aa3 100%); }
+
+.pill--budget { background: linear-gradient(135deg,#06c28a 0%, #20d8a4 100%); }
+.pill--tools  { background: linear-gradient(135deg,#5b6cff 0%, #8b5bff 100%); }
+.pill--department  { background: linear-gradient(135deg,#ff7341 0%, #ff4d6d 100%); }
+.pill--cpu    { background: linear-gradient(135deg,#ff2d87 0%, #ff5aa3 100%); }

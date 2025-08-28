@@ -1,2 +1,54 @@
+@config "./tailwind.v4.config.js";
+
 @import url("tailwindcss");
 
+@layer base {
+  html, body {
+    font-family: "Inter", "Inter var", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+}
+
+/* Thème par défaut (light) */
+:root {
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --muted: #475569;
+  --notif: #ef4444;
+  --avatar-bg: #e5e7eb;
+  --card-bg: #fff;
+  --border: #e5e7eb;
+  --row-border: #f1f5f9;
+
+  --kpi-bg: #fff;
+  --kpi-border: #eef0f3;
+  --kpi-shadow: 0 1px 0 rgba(16, 24, 40, .02),
+  0 2px 8px rgba(16, 24, 40, .04);
+  --kpi-shadow-hover: 0 2px 0 rgba(16, 24, 40, .02),
+  0 8px 20px rgba(16, 24, 40, .08);
+}
+
+/* Thème sombre */
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --notif: #f87171;
+  --avatar-bg: #334155;
+  --card-bg: #0f172a;
+  --border: #1f2937;
+  --row-border: #111827;
+
+  --kpi-bg: #1e293b;
+  --kpi-border: #334155;
+  --kpi-shadow: 0 1px 0 rgba(0,0,0,.4),
+  0 2px 8px rgba(0,0,0,.6);
+  --kpi-shadow-hover: 0 2px 0 rgba(0,0,0,.4),
+  0 8px 20px rgba(0,0,0,.7);
+}
+
+/* Appliquer couleurs globales */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+}
