@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {forkJoin, map, Observable} from 'rxjs';
 import { environment } from '../environments/environment';
 
-export type ToolStatus = 'active' | 'expiring' | 'unused' | string;
+export type ToolStatus = 'active' | 'expiring' | 'unused' | 'unknown';
 
 export interface Tool {
   id: number | string;
@@ -55,7 +55,7 @@ export class ToolsService {
         department: row.category ?? '—',
         users: row.active_users_count ?? 0,
         monthlyCost: row.monthly_cost ?? 0,
-        status: row.status ?? 'active'
+        status: row.status ?? 'unknown'
       })))
     );
   }

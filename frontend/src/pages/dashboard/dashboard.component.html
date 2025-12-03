@@ -1,60 +1,87 @@
-<main class="dashboard">
+<div *ngIf="error" class="py-4 text-center text-red-500 text-sm">
+  Failed to load dashboard data. Please try again later.
+</div>
+
+<main class="dashboard" *ngIf="!error">
   <section class="dashboard-header">
     <h1>Internal Tools Dashboard</h1>
     <p>Monitor and manage your organization's software tools and expenses</p>
   </section>
 
   <section class="grid">
-    <!-- Monthly Budget -->
-    <div class="card" *ngIf="kpis$ | async as k">
-      <div class="kpi-head">
-        <h4>Monthly Budget</h4>
-        <div class="kpi-icon kpi-icon--budget">
-          <lucide-icon name="trending-up"></lucide-icon>
+    <!-- Etat vide -->
+    <ng-container *ngIf="kpisEmpty">
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="kpi-head">
+          <h4>No analytics data</h4>
         </div>
       </div>
-      <div class="value">
-        {{ euro(k.budget.current_month_total) }}
-        <span class="muted">/ {{ euro(k.budget.monthly_limit/1000) }}k</span>
-      </div>
-      <span class="pill pill--budget">{{ k.budget.budget_change }}</span>
-    </div>
+    </ng-container>
 
-    <!-- Active Tools -->
-    <div class="card" *ngIf="kpis$ | async as k">
-      <div class="kpi-head">
-        <h4>Active Tools</h4>
-        <div class="kpi-icon kpi-icon--tools">
-          <lucide-icon name="wrench"></lucide-icon>
+    <!-- KPIs cards -->
+    <ng-container *ngIf="!kpisEmpty && (kpis$ | async) as k; else kpiLoading">
+      <!-- Monthly Budget -->
+      <div class="card">
+        <div class="kpi-head">
+          <h4>Monthly Budget</h4>
+          <div class="kpi-icon kpi-icon--budget">
+            <lucide-icon name="trending-up"></lucide-icon>
+          </div>
         </div>
+        <div class="value">
+          {{ euro(k.budget.current_month_total) }}
+          <span class="muted">/ {{ euro(k.budget.monthly_limit/1000) }}k</span>
+        </div>
+        <span class="pill pill--budget">{{ k.budget.budget_change }}</span>
       </div>
-      <div class="value">{{ k.tools.count }}</div>
-      <span class="pill pill--tools">{{ k.tools.tools_change }}</span>
-    </div>
 
-    <!-- Departments -->
-    <div class="card" *ngIf="kpis$ | async as k">
-      <div class="kpi-head">
-        <h4>Departments</h4>
-        <div class="kpi-icon kpi-icon--department">
-          <lucide-icon name="building-2"></lucide-icon>
+      <!-- Active Tools -->
+      <div class="card">
+        <div class="kpi-head">
+          <h4>Active Tools</h4>
+          <div class="kpi-icon kpi-icon--tools">
+            <lucide-icon name="wrench"></lucide-icon>
+          </div>
         </div>
+        <div class="value">{{ k.tools.count }}</div>
+        <span class="pill pill--tools">{{ k.tools.tools_change }}</span>
       </div>
-      <div class="value">{{ k.departments.count }}</div>
-      <span class="pill pill--department">{{ k.departments.departments_change }}</span>
-    </div>
 
-    <!-- Cost/User -->
-    <div class="card" *ngIf="kpis$ | async as k">
-      <div class="kpi-head">
-        <h4>Cost/User</h4>
-        <div class="kpi-icon kpi-icon--cpu">
-          <lucide-icon name="users"></lucide-icon>
+      <!-- Departments -->
+      <div class="card">
+        <div class="kpi-head">
+          <h4>Departments</h4>
+          <div class="kpi-icon kpi-icon--department">
+            <lucide-icon name="building-2"></lucide-icon>
+          </div>
         </div>
+        <div class="value">{{ k.departments.count }}</div>
+        <span class="pill pill--department">{{ k.departments.departments_change }}</span>
       </div>
-      <div class="value">{{ euro(k.costPerUser.cost_per_user) }}</div>
-      <span class="pill pill--cpu">{{ k.costPerUser.cost_per_user_change }}</span>
-    </div>
+
+      <!-- Cost/User -->
+      <div class="card">
+        <div class="kpi-head">
+          <h4>Cost/User</h4>
+          <div class="kpi-icon kpi-icon--cpu">
+            <lucide-icon name="users"></lucide-icon>
+          </div>
+        </div>
+        <div class="value">{{ euro(k.costPerUser.cost_per_user) }}</div>
+        <span class="pill pill--cpu">{{ k.costPerUser.cost_per_user_change }}</span>
+      </div>
+    </ng-container>
+
+    <!-- Loading KPIs -->
+    <ng-template #kpiLoading>
+      <ng-container *ngIf="!kpisEmpty">
+        <div class="card" *ngFor="let _ of [1, 2, 3, 4]">
+          <div class="kpi-head">
+            <h4>Loading...</h4>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
   </section>
 
   <section class="card">
@@ -78,36 +105,58 @@
         </tr>
         </thead>
 
-        <tbody *ngIf="!loading">
-        <tr *ngFor="let t of tools$ | async">
-          <td>
-            <div class="tool-cell">
-              <div class="logo-bg">
-                <lucide-icon
-                  [name]="getDepartmentIcon(t.department)"
-                  class="icon-25">
-                </lucide-icon>
-              </div>
-              <span class="tool-name">{{ t.name }}</span>
-            </div>
-          </td>
+        <tbody *ngIf="tools$ | async as tools; else toolsLoading">
+          <!-- Etat vide -->
+          <ng-container *ngIf="tools.length === 0; else toolsRows">
+            <tr>
+              <td colspan="5" class="text-center text-sm text-slate-500 py-6">
+                No tools found in the last 30 days.
+              </td>
+            </tr>
+          </ng-container>
 
-          <td>{{ t.department }}</td>
-          <td class="text-center">{{ t.users }}</td>
-          <td class="text-center">{{ euro(t.monthlyCost) }}</td>
+          <!-- Table normale -->
+          <ng-template #toolsRows>
+            <tr *ngFor="let t of tools">
+              <td>
+                <div class="tool-cell">
+                  <div class="logo-bg">
+                    <lucide-icon
+                      [name]="getDepartmentIcon(t.department)"
+                      class="icon-25">
+                    </lucide-icon>
+                  </div>
+                  <span class="tool-name">{{ t.name }}</span>
+                </div>
+              </td>
 
-          <td class="text-center">
-            <span class="badge"
-                  [ngClass]="{
-                'badge--active': t.status === 'active',
-                'badge--expiring': t.status === 'expiring',
-                'badge--unused': t.status === 'unused'
-              }">
-              {{ t.status | titlecase }}
-            </span>
-          </td>
-        </tr>
+              <td>{{ t.department }}</td>
+              <td class="text-center">{{ t.users }}</td>
+              <td class="text-center">{{ euro(t.monthlyCost) }}</td>
+
+              <td class="text-center">
+                <span class="badge"
+                      [ngClass]="{
+                    'badge--active': t.status === 'active',
+                    'badge--expiring': t.status === 'expiring',
+                    'badge--unused': t.status === 'unused'
+                  }">
+                  {{ t.status === 'unknown' ? 'Unknown' : (t.status | titlecase) }}
+                </span>
+              </td>
+            </tr>
+          </ng-template>
         </tbody>
+
+        <!-- Loading -->
+        <ng-template #toolsLoading>
+          <tbody>
+            <tr>
+              <td colspan="5" class="text-center">Loading tools...</td>
+            </tr>
+          </tbody>
+        </ng-template>
+
       </table>
     </div>
   </section>

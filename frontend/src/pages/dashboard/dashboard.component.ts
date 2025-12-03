@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {catchError, Observable, of, tap} from 'rxjs';
 import {DashboardKpis, Tool, ToolsService} from '../../hooks/tools.service';
 import { LucideAngularModule } from 'lucide-angular';
 import {RouterModule} from '@angular/router';
@@ -15,15 +15,37 @@ import {CommonModule} from '@angular/common';
 export class DashboardComponent implements OnInit {
   tools$!: Observable<Tool[]>;
   kpis$!: Observable<DashboardKpis>;
-  loading = true;
+
+  error = false;
+
+  kpisEmpty = false;
 
   constructor(private toolsService: ToolsService) {}
 
   ngOnInit(): void {
-    this.tools$ = this.toolsService.getRecentTools();
-    this.kpis$ = this.toolsService.getKpis();
-    // petit délai visuel de chargement
-    this.tools$.subscribe({ complete: () => (this.loading = false) });
+    this.tools$ = this.toolsService.getRecentTools().pipe(
+      catchError(err => {
+        console.error(err);
+        this.error = true;
+        return of([] as Tool[]);
+      })
+    );
+    this.kpis$ = this.toolsService.getKpis().pipe(
+      tap(k => {
+        this.kpisEmpty = this.isKpisEmpty(k);
+      }),
+      catchError(err => {
+        console.error(err);
+        this.error = true;
+        this.kpisEmpty = true;
+        return of({
+          budget: { current_month_total: 0, monthly_limit: 0, budget_change: '' },
+          tools: { count: 0, tools_change: '' },
+          departments: { count: 0, departments_change: '' },
+          costPerUser: { cost_per_user: 0, cost_per_user_change: '' }
+        });
+      })
+    );
   }
 
   euro(n: number | null | undefined): string {
@@ -50,6 +72,19 @@ export class DashboardComponent implements OnInit {
       case 'finance': return 'landmark';
       default: return 'app-window';
     }
+  }
+
+  private isKpisEmpty(k: DashboardKpis): boolean {
+    if (!k)
+      return true;
+
+    return (
+      (k.budget.current_month_total ?? 0) === 0 &&
+      (k.budget.monthly_limit ?? 0) === 0 &&
+      (k.tools.count ?? 0) === 0 &&
+      (k.departments.count ?? 0) === 0 &&
+      (k.costPerUser.cost_per_user ?? 0) === 0
+    );
   }
 
 }
