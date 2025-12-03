@@ -1,1 +1,131 @@
-<p>tools works!</p>
+<div *ngIf="error" class="py-4 text-center text-red-500 text-sm">
+  Failed to load tools. Please try again later.
+</div>
+
+<main class="tools" *ngIf="!error">
+  <section class="tools-header">
+    <h1>Tools Catalog</h1>
+    <p>Find, filter and navigate your internal tools effortlessly.</p>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <h2>All tools</h2>
+      <div class="meta">
+        <span>Page {{ page }}</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+        <tr>
+          <th class="col-tool">Tool</th>
+          <th>Category</th>
+          <th>Department</th>
+          <th class="text-center">Users</th>
+          <th class="text-center">Monthly Cost</th>
+          <th>Last update</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody *ngIf="tools$ | async as tools; else toolsLoading">
+        <!-- Table normale -->
+        <ng-container *ngIf="tools.length > 0; else toolsEmpty">
+          <tr *ngFor="let t of tools">
+            <td>
+              <div class="tool-cell">
+                <div class="logo-bg">
+                  <lucide-icon
+                    [name]="getDepartmentIcon(t.category)"
+                    class="icon-25">
+                  </lucide-icon>
+                </div>
+                <div class="tool-main">
+                  <div class="tool-name">{{ t.name }}</div>
+                  <div class="tool-description" *ngIf="t.description">
+                    {{ t.description }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td>{{ t.category }}</td>
+            <td>{{ t.department }}</td>
+
+            <td class="text-center">{{ t.users }}</td>
+
+            <td class="text-center">{{ euro(t.monthlyCost) }}</td>
+
+            <td>
+                <span *ngIf="t.updatedAt; else noDate">
+                  {{ t.updatedAt | date:'mediumDate' }}
+                </span>
+              <ng-template #noDate>
+                <span class="text-muted">—</span>
+              </ng-template>
+            </td>
+
+            <td class="text-center">
+                <span class="badge"
+                      [ngClass]="{
+                        'badge--active': t.status === 'active',
+                        'badge--expiring': t.status === 'expiring',
+                        'badge--unused': t.status === 'unused'
+                      }">
+                  {{ t.status === 'unknown' ? 'Unknown' : (t.status | titlecase) }}
+                </span>
+            </td>
+
+            <td class="text-center">
+              <div class="tools-actions">
+                <button type="button" class="tools-action">
+                  View
+                </button>
+                <button type="button" class="tools-action">
+                  Edit
+                </button>
+                <button type="button" class="tools-action">
+                  {{ t.status === 'active' ? 'Disable' : 'Enable' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+
+        <!-- Loading -->
+        <ng-template #toolsLoading>
+          <tbody>
+          <tr>
+            <td colspan="8" class="text-center text-sm text-slate-500 py-4">
+              Loading tools...
+            </td>
+          </tr>
+          </tbody>
+        </ng-template>
+
+        <!-- Etat vide -->
+        <ng-template #toolsEmpty>
+          <tr>
+            <td colspan="8" class="text-center text-sm text-slate-500 py-4">
+              No tools found.
+            </td>
+          </tr>
+        </ng-template>
+      </table>
+    </div>
+
+    <div class="tools-pagination">
+      <button (click)="prevPage()" [disabled]="page === 1" class="tools-pagination-btn">
+        Previous
+      </button>
+      <span class="tools-pagination-page">Page {{ page }}</span>
+      <button (click)="nextPage()" class="tools-pagination-btn">
+        Next
+      </button>
+    </div>
+  </section>
+</main>

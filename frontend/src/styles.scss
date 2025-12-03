@@ -52,3 +52,130 @@ html, body {
   background: var(--bg);
   color: var(--text);
 }
+
+.card {
+  background: var(--card-bg);
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.06);
+}
+
+/* En-tête de carte (titre + méta à droite) */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.card-header h2 {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Petit texte "Last 30 days" */
+.meta {
+  display: inline-flex;
+  gap: 18px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.meta-icon {
+  color: var(--text-muted);
+}
+
+/* ----- Table Recent Tools ----- */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.table thead th {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.table td {
+  padding: 14px 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--row-border);
+}
+
+.table tbody tr:hover {
+  background: var(--hover);
+}
+
+.col-tool {
+  padding-left: 24px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Cellule avec logo + nom de l’outil */
+.tool-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-bg {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-name {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Icône d’application */
+.icon-25 {
+  width:25px;
+  height:25px;
+  stroke-width: 2.5;
+  color: #fff;
+}
+.icon-invert {
+  color:#fff;
+}
+
+/* Badges de statut (active / expiring / unused) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.badge--active   {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+}
+.badge--expiring {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+}
+.badge--unused   {
+  background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+}
