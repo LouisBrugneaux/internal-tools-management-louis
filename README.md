@@ -17,10 +17,10 @@ Répartition dans les dossiers :
 - **components :** Header avec logo, nav, recherche, actions et dropdown du profil.
 - **pages :** 
   - **Dashboard :** KPI cards et la table Recent Tools. 
-  - **Tools :** placeholder à compléter.
-  - **Analytics :** placeholder à compléter.
+  - **Tools :** liste paginée des outils.
+  - **Analytics :** 3 sous-onglets : Cost, Usage, Insights.
 - **environments :** Pour configurer l'API.
-- **hooks :** Data fetching, mapping et tri des données sur les tools.
+- **hooks :** Data fetching, mapping et tri des données.
 
 ## Design System Evolution
 
@@ -38,34 +38,67 @@ Répartition dans les dossiers :
 
 ## Navigation & User Journey
 
-**Flow actuel :**
-- Header fixe -> Dashboard.
-- Dropdown profil avec actions (Profile, Settings, Billing, Team et Logout).
+- **Flow actuel :** 
+  - **Dashboard :**
+    - Dropdown profil avec actions (Profile, Settings, Billing, Team et Logout).
+    - KPIs
+    - Table des outils récents
 
-**A faire :**
-- Activer la recherche
-- Définir les routes pour Tools et Analytics
+  - **Tools :**
+    - Liste complète avec pagination
+  - **Analytics :** 
+    - Sous-onglet Cost avec charts
+    - Sous-onglet Usage avec tableau des user adoption
+    - Sous-onglet Insights avec les alertes d'optimisation des coûts
+    
+- **A faire :**
+  - Activer la recherche
 
 ## Data Integration Strategy
 
-### Endpoints
+- Endpoints utilisés :
 
-- `GET /tools?_limit=10&_sort=updated_at&_order=desc` :
-  - Affiche **les 10 derniers outils** mis à jour (pas de pagination pour l’instant).
+  - /tools
+  - /departments
+  - /analytics
+  - /user_tools
+
+- **Stratégie Dashboard :**
+
+  - Combinaison via forkJoin() pour récupérer simultanément :
+
+    - Nombre total d’outils
+    - Nombre de départements
+    - Budget overview
+    - Cost per user
+
+- **Stratégie Tools :**
+
+  - Récupération des données via /tools
+  
+  - Pagination via :
+    - _page
+    - _limit
 
 
-- **GET /departments :** nombre de départements.
+- **Stratégie Analytics :**
 
-- **GET /analytics :** budget_overview, kpi_trends, cost_analytics.
+  - **Cost Analytics :**
+    - 3 graphiques intégrés (line, donut, horizontal bar)
+    - Budget KPI
 
-### KPI (forkJoin)
+  - **Usage Analytics :**
+    - Adoption calculée via user_tools et analytics.active_users
 
-On combine **tools.length**, **departments.length** et **analytics** pour créer les cartes KPIs:
-- **Monthly Budget** (limit/current + trend)
-- **Active Tools** (count + trend)
-- **Departments** (count + trend)
-- **Cost/User** (value + trend).
+  - **Insights :**
+    - Analyse simple (monthly_cost, trend, alert type, reason)
 
+- **États :**
+
+  - Intégrés sur toutes les pages :
+    - loading state
+    - error state
+    - empty state
 ## Progressive Responsive Design
 
 - Organisation du tableau des tools récents en 2 colonnes sur tablette et 4 colonnes sur desktop.
@@ -81,22 +114,34 @@ Cette partie n'a pas été faites. Il faudrait ajouter notamment:
 
 - Limitation à **10 items** pour la table des tools récents.
 - **CSS variables** pour les changements de theme (empêche les recalculs lourds).
+- Charts détruits et recrés uniquement quand nécessaire
+- Limitation du nombre de KPIs recalculés
 
 ## Design Consistency Approach
 
 - Utilisation de la **typograhie Inter** pour le texte.
+- Espacement identiques sur toutes les cards
+- Dégradés réutilisés pour : KPIs, badges et charts
+- Icônes Lucide utilisées partout
 - **Dégradés de couleur limités :** vert, violet, rouge et orange.
 
 ## Data Visualisation Philosophy
 
-**A faire :**
-
-- **1-2 graphiques** pour les coûts mensuels et users actifs.
-- **Légendes et couleurs alignées** au design system.
+- Choix : **Chart.js**
+- Line chart pour les variations mensuelles
+- Donut chart pour une claire répartition visuelle
+- Horizontal bar chart pour comparer les outils
+- Utilisation de gradients pour garder un design constant
 
 ## Next Steps / Complete App Vision
 
-- **Pour la page Tools :** tris sur les colonnes, filtres (département, status).
-- **Page Analytics :** Période sélectionnable, comparatifs selon les mois, possibilité d'export CSV.
-- **Authentification simple** et implémentation de l'avatar dans le header.
-- **Internationalisation** pour les formats des dates, des monnaies et possibilité de changer la langue du site (EN/FR).
+- **Pour la page Tools :** 
+  - Filtre par département
+  - Recherche
+  - CRUD complet
+- **Page Analytics :** 
+  - Charts supplémentaires
+  - Sélecteur de période (30d, 90d, 1y)
+  - Drill-down par département
+- **Au global :**
+  - Responsive à améliorer
