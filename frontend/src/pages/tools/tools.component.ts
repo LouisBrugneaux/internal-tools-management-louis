@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolsService, Tool } from '../../hooks/tools.service';
-import { Observable, catchError, of } from 'rxjs';
+import {Observable, catchError, of, tap} from 'rxjs';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
@@ -18,6 +18,8 @@ export class ToolsComponent implements OnInit {
   page = 1;
   limit = 10;
 
+  hasNextPage = true;
+
   constructor(private toolsService: ToolsService) {
   }
 
@@ -26,16 +28,25 @@ export class ToolsComponent implements OnInit {
   }
 
   loadTools(): void {
-    this.tools$ = this.toolsService.getTools({page: this.page, limit: this.limit}).pipe(
+    this.tools$ = this.toolsService.getTools({ page: this.page, limit: this.limit }).pipe(
+      tap(tools => {
+        this.error = false;
+
+        if (tools.length < this.limit)
+          this.hasNextPage = false;
+      }),
       catchError(err => {
         console.error(err);
         this.error = true;
+        this.hasNextPage = false;
         return of([] as Tool[]);
       })
     );
   }
 
   nextPage(): void {
+    if (!this.hasNextPage)
+      return;
     this.page++;
     this.loadTools();
   }

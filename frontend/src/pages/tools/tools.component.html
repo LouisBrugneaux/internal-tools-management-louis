@@ -123,7 +123,7 @@
         Previous
       </button>
       <span class="tools-pagination-page">Page {{ page }}</span>
-      <button (click)="nextPage()" class="tools-pagination-btn">
+      <button (click)="nextPage()" [disabled]="!hasNextPage" class="tools-pagination-btn">
         Next
       </button>
     </div>
