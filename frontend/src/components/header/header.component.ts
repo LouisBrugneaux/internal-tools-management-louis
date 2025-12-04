@@ -15,12 +15,12 @@ type Theme = 'light' | 'dark';
 })
 export class HeaderComponent implements OnInit {
   isDark = false;
-  isMenuOpen = false; // <-- état du dropdown
+  isMenuOpen = false;
 
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private doc: Document,
-    private el: ElementRef<HTMLElement>   // <-- pour détecter clics hors composant
+    private el: ElementRef<HTMLElement>
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
     this.applyTheme(theme);
   }
 
-  // --- Theme ---
+  // Dark/Light mode
   toggleTheme(): void { this.applyTheme(this.isDark ? 'light' : 'dark'); }
   private applyTheme(theme: Theme) {
     this.renderer.setAttribute(this.doc.documentElement, 'data-theme', theme);
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
   get themeBtnLabel() { return this.isDark ? 'Activer le mode clair' : 'Activer le mode sombre'; }
   get themeIcon() { return this.isDark ? 'sun' : 'moon'; }
 
-  // --- Dropdown profil ---
+  // Dropdown du profil
   toggleMenu(event?: MouseEvent) {
     if (event) event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;

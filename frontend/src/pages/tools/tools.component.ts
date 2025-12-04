@@ -57,32 +57,19 @@ export class ToolsComponent implements OnInit {
 
   getDepartmentIcon(dept: string): string {
     switch (dept?.toLowerCase()) {
-      case 'engineering':
-        return 'zap';
-      case 'communication':
-        return 'message-circle';
-      case 'design':
-        return 'palette';
-      case 'operations':
-        return 'workflow';
-      case 'sales & marketing':
-        return 'briefcase';
-      case 'productivity':
-        return 'chart-line';
-      case 'project management':
-        return 'ruler';
-      case 'development':
-        return 'computer';
-      case 'security':
-        return 'lock';
-      case 'analytics':
-        return 'chart-pie';
-      case 'hr':
-        return 'users';
-      case 'finance':
-        return 'landmark';
-      default:
-        return 'app-window';
+      case 'engineering': return 'zap';
+      case 'communication': return 'message-circle';
+      case 'design': return 'palette';
+      case 'operations': return 'workflow';
+      case 'sales & marketing': return 'briefcase';
+      case 'productivity': return 'chart-line';
+      case 'project management': return 'ruler';
+      case 'development': return 'computer';
+      case 'security': return 'lock';
+      case 'analytics': return 'chart-pie';
+      case 'hr': return 'users';
+      case 'finance': return 'landmark';
+      default: return 'app-window';
     }
   }
 }

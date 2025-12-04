@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {catchError, Observable, of, tap} from 'rxjs';
-import {DashboardKpis, Tool, ToolsService} from '../../hooks/tools.service';
+import {DashboardKpis, Tool, DashboardService} from '../../hooks/dashboard.service';
 import { LucideAngularModule } from 'lucide-angular';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
@@ -20,17 +20,17 @@ export class DashboardComponent implements OnInit {
 
   kpisEmpty = false;
 
-  constructor(private toolsService: ToolsService) {}
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    this.tools$ = this.toolsService.getRecentTools().pipe(
+    this.tools$ = this.dashboardService.getRecentTools().pipe(
       catchError(err => {
         console.error(err);
         this.error = true;
         return of([] as Tool[]);
       })
     );
-    this.kpis$ = this.toolsService.getKpis().pipe(
+    this.kpis$ = this.dashboardService.getKpis().pipe(
       tap(k => {
         this.kpisEmpty = this.isKpisEmpty(k);
       }),

@@ -1,1 +1,310 @@
-<p>analytics works!</p>
+<div *ngIf="error" class="py-4 text-center text-red-500 text-sm">
+  Failed to load analytics data. Please try again later.
+</div>
+
+<main class="analytics" *ngIf="!error">
+  <!-- Header -->
+  <section class="analytics-header">
+    <h1>Analytics</h1>
+    <p>Track software costs, usage, and insights across your organization</p>
+  </section>
+
+  <!-- Sous-onglets -->
+  <section class="analytics-tabs card">
+    <button
+      type="button"
+      class="analytics-tab"
+      [class.analytics-tab--active]="selectedTab === 'cost'"
+      (click)="selectTab('cost')"
+    >
+      Cost analytics
+    </button>
+    <button
+      type="button"
+      class="analytics-tab"
+      [class.analytics-tab--active]="selectedTab === 'usage'"
+      (click)="selectTab('usage')"
+    >
+      Usage analytics
+    </button>
+    <button
+      type="button"
+      class="analytics-tab"
+      [class.analytics-tab--active]="selectedTab === 'insights'"
+      (click)="selectTab('insights')"
+    >
+      Insights
+    </button>
+  </section>
+
+  <!-- Cost analytics -->
+  <section *ngIf="selectedTab === 'cost'" class="analytics-grid">
+    <ng-container *ngIf="analytics$ | async as stats; else analyticsLoading">
+      <!-- Monthly Spend Evolution -->
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Monthly spend evolution (in €)</h2>
+          <div class="meta">
+            <span>Last {{ stats?.monthlySpend?.length || 0 }} months</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="stats?.monthlySpend?.length; else noMonthlyData">
+          <div class="analytics-chart">
+            <canvas #monthlyChart></canvas>
+          </div>
+        </ng-container>
+
+        <ng-template #noMonthlyData>
+          <p class="text-muted" style="padding: 1rem;">
+            No monthly spend data available.
+          </p>
+        </ng-template>
+      </section>
+
+      <!-- Department cost breakdown -->
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Department cost breakdown (in €)</h2>
+          <div class="meta">
+            <span>Current period</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="stats?.departmentCosts?.length; else noDeptData">
+          <div class="analytics-chart">
+            <canvas #deptChart></canvas>
+          </div>
+        </ng-container>
+
+        <ng-template #noDeptData>
+          <p class="text-muted" style="padding: 1rem;">
+            No department cost data available.
+          </p>
+        </ng-template>
+      </section>
+
+      <!-- Top expensive tools -->
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Top expensive tools (in €)</h2>
+          <div class="meta">
+            <span>Monthly cost</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="stats?.topExpensiveTools?.length; else noToolsData">
+          <div class="analytics-chart">
+            <canvas #toolsChart></canvas>
+          </div>
+        </ng-container>
+
+        <ng-template #noToolsData>
+          <p class="text-muted" style="padding: 1rem;">
+            No tool cost data available.
+          </p>
+        </ng-template>
+      </section>
+
+      <!-- Budget progress -->
+      <section class="card analytics-card analytics-card--kpi" *ngIf="stats">
+        <div class="kpi-head">
+          <h4>Budget progress</h4>
+          <div class="kpi-icon kpi-icon--budget">
+            <lucide-icon name="trending-up"></lucide-icon>
+          </div>
+        </div>
+
+        <div class="analytics-budget-main">
+          <div class="analytics-budget-values">
+            <span class="analytics-budget-current">
+              {{ euro(stats.currentSpend) }}
+            </span>
+            <span class="analytics-budget-limit">
+              / {{ euro(stats.budgetLimit) }}
+            </span>
+          </div>
+          <span class="analytics-budget-percent">
+            {{ budgetProgressPercent(stats) }}%
+          </span>
+        </div>
+
+        <div class="analytics-budget-bar">
+          <div
+            class="analytics-budget-bar-fill"
+            [style.width.%]="budgetProgressPercent(stats)"
+          ></div>
+        </div>
+
+        <p class="analytics-budget-caption">
+          Current month spend vs. monthly budget limit.
+        </p>
+      </section>
+    </ng-container>
+
+    <!-- Loading -->
+    <ng-template #analyticsLoading>
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Monthly spend evolution (in €)</h2>
+        </div>
+        <p class="text-muted" style="padding: 1rem;">
+          Loading analytics...
+        </p>
+      </section>
+
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Department cost breakdown (in €)</h2>
+        </div>
+        <p class="text-muted" style="padding: 1rem;">
+          Loading analytics...
+        </p>
+      </section>
+
+      <section class="card analytics-card">
+        <div class="card-header">
+          <h2>Top expensive tools (in €)</h2>
+        </div>
+        <p class="text-muted" style="padding: 1rem;">
+          Loading analytics...
+        </p>
+      </section>
+
+      <section class="card analytics-card analytics-card--kpi">
+        <div class="kpi-head">
+          <h4>Budget progress</h4>
+          <div class="kpi-icon kpi-icon--budget">
+            <lucide-icon name="trending-up"></lucide-icon>
+          </div>
+        </div>
+        <p class="text-muted" style="padding: 0.75rem 0;">
+          Loading analytics...
+        </p>
+      </section>
+    </ng-template>
+  </section>
+
+  <!-- Usage analytics -->
+  <section *ngIf="selectedTab === 'usage' && !error">
+    <section class="card analytics-card" style="margin-top: 1rem;">
+      <div class="card-header">
+        <h2>User adoption by tool</h2>
+        <div class="meta">
+          <lucide-icon name="calendar" class="meta-icon"></lucide-icon>
+          <span>Last 30 days</span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="usage$ | async as usage; else usageLoading">
+        <div *ngIf="usage.length; else noUsage">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Tool</th>
+                  <th>Department</th>
+                  <th>Adoption rate</th>
+                  <th class="text-right">Trend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tool of usage">
+                  <td>{{ tool.name }}</td>
+                  <td>{{ tool.department }}</td>
+                  <td>
+                  <span class="badge badge--active">
+                    {{ tool.adoptionRate }}%
+                  </span>
+                  </td>
+                  <td class="text-right">
+                  <span
+                    class="trend"
+                    [class.trend--up]="tool.trend > 0"
+                    [class.trend--down]="tool.trend < 0"
+                    [class.trend--flat]="tool.trend === 0"
+                  >
+                    <ng-container *ngIf="tool.trend > 0">↑</ng-container>
+                    <ng-container *ngIf="tool.trend < 0">↓</ng-container>
+                    <ng-container *ngIf="tool.trend === 0">◼</ng-container>
+                    {{ tool.trend }}%
+                  </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Etat vide -->
+        <ng-template #noUsage>
+          <p class="text-muted" style="padding: 1rem;">
+            No adoption data available.
+          </p>
+        </ng-template>
+      </ng-container>
+
+      <!-- Loading -->
+      <ng-template #usageLoading>
+        <p class="text-muted" style="padding: 1rem;">
+          Loading adoption metrics...
+        </p>
+      </ng-template>
+    </section>
+  </section>
+
+
+  <!-- Insights dashboard -->
+  <section *ngIf="selectedTab === 'insights' && !error">
+    <section class="card analytics-card" style="margin-top: 1rem;">
+      <div class="card-header">
+        <h2>Cost optimization alerts</h2>
+        <div class="meta">
+          <span>Based on monthly cost</span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="alerts$ | async as alerts; else alertsLoading">
+        <div *ngIf="alerts.length; else noAlerts">
+          <div class="alert-row" *ngFor="let alert of alerts">
+            <div class="alert-main">
+              <h4>{{ alert.name }}</h4>
+              <p class="alert-reason">
+                {{ alert.reason }}
+              </p>
+            </div>
+            <div class="alert-meta">
+              <span class="alert-cost">
+                {{ euro(alert.monthlyCost) }}/month
+              </span>
+              <span
+                class="badge"
+                [ngClass]="{
+                'badge--unused': alert.type === 'critical',
+                'badge--expiring': alert.type === 'warning'
+              }"
+              >
+              {{ alert.type === 'critical' ? 'Critical' : 'Watch' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Etat vide -->
+        <ng-template #noAlerts>
+          <p class="text-muted" style="padding: 1rem;">
+            No alerts detected for now.
+          </p>
+        </ng-template>
+      </ng-container>
+
+      <!-- Loading -->
+      <ng-template #alertsLoading>
+        <p class="text-muted" style="padding: 1rem;">
+          Scanning tools...
+        </p>
+      </ng-template>
+    </section>
+  </section>
+
+</main>

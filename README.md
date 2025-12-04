@@ -73,7 +73,7 @@ On combine **tools.length**, **departments.length** et **analytics** pour créer
 ## Testing Strategy
 
 Cette partie n'a pas été faites. Il faudrait ajouter notamment:
-- Des **tests unitaires sur ToolsService** : sur le mapping des champs et le tri updated_at par ex.
+- Des **tests unitaires sur DashboardService** : sur le mapping des champs et le tri updated_at par ex.
 - Tests sur changements de theme **clair/sombre**.
 - Test de la **fonction euro()** (formats, null/undefined).
 
